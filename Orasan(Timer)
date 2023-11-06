@@ -1,0 +1,119 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+public class Main {
+    private JFrame frame;
+    private JLabel timerLabel;
+    private Timer timer;
+    private int seconds = 0;
+
+    public Main () {
+        frame = new JFrame("Orasan");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(500, 300);
+
+        timerLabel = new JLabel("00:00");
+        Font labelFont= timerLabel.getFont();
+        timerLabel.setFont(new Font(labelFont.getName(),Font.PLAIN,80));
+        timerLabel.setPreferredSize(new Dimension(80,80));
+
+        timerLabel.setHorizontalAlignment(JLabel.CENTER);
+
+        JButton startButton = new JButton("START");
+        Font labelFonts= startButton.getFont();
+        startButton.setFont(new Font(labelFonts.getName(),Font.PLAIN,30));
+        startButton.setPreferredSize(new Dimension(30,30));
+        startButton.setBackground(Color.green);
+        
+        JButton stopButton = new JButton("STOP");
+        Font labelFontss= stopButton.getFont();
+        stopButton.setFont(new Font(labelFontss.getName(),Font.PLAIN,30));
+        stopButton.setPreferredSize(new Dimension(30,30));
+          stopButton.setBackground(Color.RED);
+        
+        JButton resetButton = new JButton("RESET");
+         Font labelFontsss= resetButton.getFont();
+        resetButton.setFont(new Font(labelFontsss.getName(),Font.PLAIN,30));
+        resetButton.setPreferredSize(new Dimension(30,30));
+                resetButton.setBackground(Color.GRAY);
+        
+        startButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                startTimer();
+            }
+        });
+
+        stopButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                stopTimer();
+            }
+        });
+
+        resetButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                resetTimer();
+            }
+        });
+
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(new FlowLayout());
+        
+        buttonPanel.add(startButton);
+        Dimension newButtonSize= new Dimension(150,40);
+        startButton.setPreferredSize(newButtonSize);
+        
+        buttonPanel.add(resetButton);
+        resetButton.setPreferredSize(newButtonSize);
+        
+          buttonPanel.add(stopButton);
+        stopButton.setPreferredSize(newButtonSize);
+        frame.setLayout(new BorderLayout());
+        frame.add(timerLabel, BorderLayout.CENTER);
+        frame.add(buttonPanel, BorderLayout.SOUTH);
+
+        frame.setVisible(true);
+    }
+
+    private void startTimer() {
+        if (timer == null || !timer.isRunning()) {
+            timer = new Timer(1000, new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    seconds++;
+                    int minutes = seconds / 60;
+                    int remainingSeconds = seconds % 60;
+                    timerLabel.setText(String.format("%02d:%02d", minutes, remainingSeconds));
+                }
+            });
+            timer.start();
+        }
+    }
+
+    private void stopTimer() {
+        if (timer != null && timer.isRunning()) {
+            timer.stop();
+        }
+    }
+
+    private void resetTimer() {
+        stopTimer();
+        seconds = 0;
+        timerLabel.setText("00:00");
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                new Main();
+            }
+        });
+    }
+}
+
+
